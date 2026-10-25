@@ -1,4 +1,19 @@
 name: mcd_smart_order
+
+# 应用图标：工程根目录 logo.png（修改后运行 dart run flutter_launcher_icons 重新生成）
+flutter_launcher_icons:
+  image_path: "logo.png"
+  android: true # 替换 android/app/src/main/res/mipmap-*/ic_launcher.png
+  ios: true
+  remove_alpha_ios: true # iOS 图标不允许透明通道
+  macos:
+    generate: true
+  windows:
+    generate: true # 生成 windows/runner/resources/app_icon.ico
+    image_path: "logo.png"
+    icon_size: 48
+  web:
+    generate: true # favicon + manifest 图标
 description: >-
   跨平台智能麦当劳点餐助手：基于麦当劳中国官方 MCP 服务，
   提供省钱/活动/套餐推荐并支持直达下单（到店自取/得来速/麦乐送）。
@@ -36,6 +51,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  shared_preferences: ^2.5.6
+  dynamic_color: 1.7.0
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +64,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
