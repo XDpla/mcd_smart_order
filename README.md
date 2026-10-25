@@ -87,6 +87,8 @@ flutter test
   3. **补证书**：用 `keytool -importcert -trustcacerts -cacerts` 把缺失根证书导入 JBR 的 `lib/security/cacerts`（注意 `-Djavax.net.ssl.trustStoreType=Windows-ROOT` 在 JBR 21 已不可用）。
 - **Gradle 卡在 `Timeout of 120000 reached waiting for exclusive access to file: ...\\gradle-x.y.z.zip`**：发行包下载被另一个 Gradle 进程持锁（如 Android Studio 或上一次未退干净的构建）。结束残留的 `java.exe`（`gradlew`/daemon）并删除该目录下的 `*.zip.part`、`*.zip.lck` 后重试。
 - **注意 `GRADLE_USER_HOME`**：本机被设为 `D:\GradleHome`（非默认的 `%USERPROFILE%\.gradle`），排查 wrapper 缓存时要看这个目录，否则会误判「本地没有缓存」。
+- **`flutter build apk` 报 `checkReleaseAarMetadata` 大量 "requires libraries and applications that depend on it to compile against version 32/33/34 or later ... is currently compiled against android-31"**：某些旧插件（如 dynamic_color 1.7.0）在自己的 `android/build.gradle` 里硬编码 `compileSdkVersion 31`，而其 androidx 传递依赖要求更高。修法：在 `android/build.gradle.kts` 的 `subprojects { afterEvaluate { ... } }` 中统一抬升插件子项目 compileSdk（本项目已内置，强制为 36；注意该块必须放在 `evaluationDependsOn(":app")` 之前注册，否则报 "project is already evaluated"）。
+- **构建报 `os::commit_memory ... 页面文件太小`（errno 1455）或 `Gradle build daemon disappeared unexpectedly`**：提交内存（物理内存+页面文件）耗尽。本项目 `android/gradle.properties` 已把堆降到 `-Xmx3G` 并限制 `org.gradle.workers.max=2`、`kotlin.compiler.execution.strategy=in-process`；构建前可先 `gradlew --stop` 清理残留守护进程，并关闭占内存的大程序（8GB 物理内存的机器尤为明显）。
 - **返回字段与预期不符**：工具返回中的字段名未全部在文档约定，应用对常见命名做了容错解析，并在各页面提供"原始返回数据"折叠视图便于核对。
 
 ## 使用示例
